@@ -22,7 +22,8 @@ impl fmt::Display for Ram
 {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result
     {
-        writeln!(f, "Mémoire utilisée : {:.2}/{:.2} Gb", bytes_to_gb(self.used), bytes_to_gb(self.total))
+        // writeln!(f, "Mémoire utilisée : {:.2}/{:.2} Gb", bytes_to_gb(self.used), bytes_to_gb(self.total))
+        writeln!(f, "Mémoire utilisée : {:}/{:} Gb", self.used, self.total)
     }
 }
 
