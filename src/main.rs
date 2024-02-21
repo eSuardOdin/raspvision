@@ -1,5 +1,5 @@
 use sysinfo::{
-    Components, Disks, Networks, System
+    Components, CpuRefreshKind, Disks, Networks, Process, RefreshKind, System, MINIMUM_CPU_UPDATE_INTERVAL
 };
 use std::fmt;
 
@@ -23,7 +23,7 @@ impl fmt::Display for Ram
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result
     {
         // writeln!(f, "Mémoire utilisée : {:.2}/{:.2} Gb", bytes_to_gb(self.used), bytes_to_gb(self.total))
-        writeln!(f, "Mémoire utilisée : {:}/{:} Gb", self.used, self.total)
+        writeln!(f, "Mémoire utilisée : {:}/{:} bytes   ", self.used, self.total)
     }
 }
 
@@ -37,4 +37,17 @@ fn main() {
         total: sys.total_memory()
     };
     println!("{}", ram);
+
+    let mut s = System::new_with_specifics(RefreshKind::new().with_cpu(CpuRefreshKind::everything()));
+
+    loop
+    {
+        std::thread::sleep(MINIMUM_CPU_UPDATE_INTERVAL * 50);
+        s.refresh_cpu();
+        for cpu in s.cpus()
+        {
+            println!("{}%", cpu.cpu_usage());
+        }
+    }
+
 }
