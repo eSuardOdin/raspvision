@@ -1,4 +1,5 @@
-use std::fs;
+use std::{fmt, fs};
+use std::error::Error;
 // use std::fmt;
 
 #[derive(Debug)]
@@ -8,11 +9,10 @@ pub struct Os {
 }
 
 impl Os {
-    pub fn build(path: &str) -> Result<Self, &'static str>
+    pub fn build(path: &str) -> Result<Self, Box<dyn Error>>
     {
-        let file_content = fs::read_to_string(path).unwrap_or_else(|err| {
-            format!("Error while getting os info : {}", err)
-        });
+        let file_content = fs::read_to_string(path)?;
+        
         let mut f_name = String::from("");
         let mut f_version = String::from("");
         for line in file_content.lines()
